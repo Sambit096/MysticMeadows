@@ -1,0 +1,22 @@
+# Unity generated
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Mm]emoryCaptures/
+
+# Rider / VS
+*.csproj
+*.unityproj
+*.sln
+*.user
+*.pidb
+*.userprefs
+
+# Exclude Cloud / Crash reports
+*.stacktrace
+
+# Cache
+*.shadercache
