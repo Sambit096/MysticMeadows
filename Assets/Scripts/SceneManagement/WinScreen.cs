@@ -34,19 +34,19 @@ public class WinScreen : MonoBehaviour
         Time.timeScale = 0f;
     }
 
-    private void OnReplay()
+    public void OnReplay()
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    private void OnMainMenu()
+    public void OnMainMenu()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene("Main Menu");
     }
 
-    private void OnQuit()
+    public void OnQuit()
     {
         Time.timeScale = 1f;
 #if UNITY_EDITOR
