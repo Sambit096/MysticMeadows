@@ -145,10 +145,21 @@ namespace RPG.Combat
         /// </summary>
         public void EquipWeapon(Weapon weapon)
         {
-            currentWeapon = weapon;
-            Animator animator = GetComponent<Animator>();
-            weapon.Spawn(rightHandTransform, leftHandTransform, animator);
-        }
+            if (weapon == null)
+            {
+                // Fall back to default unarmed weapon instead of crashing
+                weapon = defaultWeapon;
+                if (weapon == null)
+                {
+                    Debug.LogWarning("EquipWeapon called with null weapon and no defaultWeapon on " + gameObject.name);
+                    return;
+                }
+            }
+
+    currentWeapon = weapon;
+    // existing equip logic here (spawn weapon, set animator, etc.)
+}
+
 
         /// <summary>
         /// Returns the current combat target.

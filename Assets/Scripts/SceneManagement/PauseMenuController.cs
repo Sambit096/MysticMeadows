@@ -15,7 +15,8 @@ namespace RPG.SceneManagement
         [SerializeField] private Button resumeButton;
         [SerializeField] private Button mainMenuButton;
         [SerializeField] private Button quitButton;
-
+        [Header("Saving")]
+        [SerializeField] private SavingWrapper savingWrapper;
         [Tooltip("Name of the main menu scene to load when Main Menu is pressed.")]
         [SerializeField] private string mainMenuSceneName = "MainMenu";
 
@@ -54,6 +55,22 @@ namespace RPG.SceneManagement
             }
         }
 
+        public void OnSavePressed()   
+        {
+            if (savingWrapper == null)
+            {
+                savingWrapper = FindObjectOfType<SavingWrapper>();
+            }
+
+            if (savingWrapper != null)
+            {
+                savingWrapper.Save();
+            }
+            else
+            {
+                Debug.LogError("SavingWrapper not found in scene when trying to save.");
+            }
+        }
         private void PauseGame()
         {
             previousTimeScale = Time.timeScale;

@@ -4,5 +4,17 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Main Menu.unity
+    guid: e80083f1347e6b74f8d0c72d226bc0a5
+  - enabled: 1
+    path: Assets/Scenes/MysticMeadows.unity
+    guid: db4592673f946fb4fbf609449d28fd6f
+  - enabled: 1
+    path: Assets/Scenes/HowToPlay Menu.unity
+    guid: 53901240b5a03b140a80484a2bf988b5
+  - enabled: 1
+    path: Assets/Scenes/About Menu.unity
+    guid: ce7b950f9d56549449e6476a2abe0dc9
   m_configObjects: {}

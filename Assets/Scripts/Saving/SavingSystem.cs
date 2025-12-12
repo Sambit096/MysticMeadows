@@ -8,14 +8,9 @@ using UnityEngine.SceneManagement;
 
 namespace RPG.Saving
 {
-    /// <summary>
-    /// Handles saving and loading game state to/from disk.
-    /// </summary>
+    // Handles saving and loading game state to/from disk.
     public class SavingSystem : MonoBehaviour
     {
-        /// <summary>
-        /// Loads the last saved scene and restores game state.
-        /// </summary>
         public IEnumerator LoadLastScene(string saveFile)
         {
             Dictionary<string, object> state = LoadFile(saveFile);
@@ -30,9 +25,6 @@ namespace RPG.Saving
             RestoreState(state);
         }
 
-        /// <summary>
-        /// Saves the current game state to the specified file.
-        /// </summary>
         public void Save(string saveFile)
         {
             Dictionary<string, object> state = LoadFile(saveFile);
@@ -40,17 +32,11 @@ namespace RPG.Saving
             SaveFile(saveFile, state);
         }
 
-        /// <summary>
-        /// Loads game state from the specified file.
-        /// </summary>
         public void Load(string saveFile)
         {
             RestoreState(LoadFile(saveFile));
         }
 
-        /// <summary>
-        /// Deletes the specified save file.
-        /// </summary>
         public void Delete(string saveFile)
         {
             File.Delete(GetPathFromSaveFile(saveFile));
@@ -61,13 +47,15 @@ namespace RPG.Saving
             string path = GetPathFromSaveFile(saveFile);
             if (!File.Exists(path))
             {
+                Debug.Log("No save file at " + path);
                 return new Dictionary<string, object>();
             }
 
             using (FileStream stream = File.Open(path, FileMode.Open))
             {
                 BinaryFormatter formatter = new BinaryFormatter();
-                return (Dictionary<string, object>)formatter.Deserialize(stream);
+                object data = formatter.Deserialize(stream);
+                return (Dictionary<string, object>)data;
             }
         }
 
@@ -85,7 +73,10 @@ namespace RPG.Saving
 
         private void CaptureState(Dictionary<string, object> state)
         {
-            foreach (SaveableEntity saveable in FindObjectsOfType<SaveableEntity>())
+            SaveableEntity[] all = FindObjectsOfType<SaveableEntity>();
+            Debug.Log("CaptureState found " + all.Length + " SaveableEntity objects");
+
+            foreach (SaveableEntity saveable in all)
             {
                 state[saveable.GetUniqueIdentifier()] = saveable.CaptureState();
             }
@@ -107,7 +98,14 @@ namespace RPG.Saving
 
         private string GetPathFromSaveFile(string saveFile)
         {
-            return Path.Combine(Application.persistentDataPath, saveFile + ".sav");
+            string savesFolder = Path.Combine(Application.persistentDataPath, "Saves");
+            if (!Directory.Exists(savesFolder))
+            {
+                Directory.CreateDirectory(savesFolder);
+            }
+
+            // Single fixed file for this project
+            return Path.Combine(savesFolder, "MysticMeadows_Save.sav");
         }
     }
 }

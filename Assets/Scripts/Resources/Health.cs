@@ -14,7 +14,7 @@ namespace RPG.Resources
         [SerializeField] private float regenerationPercentage = 70f;
 
         private float healthPoints = -1f;
-        private bool isDead = false;
+        [SerializeField] bool isDead = false;
 
         private void Start()
         {
@@ -112,9 +112,30 @@ namespace RPG.Resources
         public void RestoreState(object state)
         {
             healthPoints = (float)state;
-            if (healthPoints == 0)
+
+            if (healthPoints <= 0)
             {
-                Die();
+                // Mark as dead visually, but don't award XP or trigger death again
+                if (!isDead)
+                {
+                    isDead = true;
+                    Animator animator = GetComponent<Animator>();
+                    if (animator != null)
+                    {
+                        animator.SetTrigger("die");
+                    }
+
+                    ActionScheduler scheduler = GetComponent<ActionScheduler>();
+                    if (scheduler != null)
+                    {
+                        scheduler.CancelCurrentAction();
+                    }
+                }
+            }
+            else
+            {
+                // Alive when loaded
+                isDead = false;
             }
         }
     }

@@ -39,7 +39,7 @@ namespace RPG.Audio
         private static bool initialized = false;
         private static bool introPlayed = false;
         private static int enemiesRemaining = 0;
-
+        private bool wasDeadOnLoad = false;
         private void Awake()
         {
             health = GetComponent<Health>();
@@ -54,30 +54,38 @@ namespace RPG.Audio
         }
 
         private void Start()
-        {
-            if (!initialized)
             {
-                EnemyDeathAudio[] all = FindObjectsOfType<EnemyDeathAudio>();
-                enemiesRemaining = 0;
-
-                foreach (var e in all)
+                if (!initialized)
                 {
-                    if (e != null && e.health != null && !e.health.IsDead())
+                    EnemyDeathAudio[] all = FindObjectsOfType<EnemyDeathAudio>();
+                    enemiesRemaining = 0;
+
+                    foreach (var e in all)
                     {
-                        enemiesRemaining++;
+                        if (e != null && e.health != null && !e.health.IsDead())
+                        {
+                            enemiesRemaining++;
+                        }
+                    }
+
+                    initialized = true;
+
+                    if (!introPlayed)
+                    {
+                        introPlayed = true;
+                        PlayIntroRemainingLine();
+                        OnEnemyDied?.Invoke(enemiesRemaining);
                     }
                 }
 
-                initialized = true;
-
-                if (!introPlayed)
+                //remember if this enemy is already dead after load
+                if (health != null && health.IsDead())
                 {
-                    introPlayed = true;
-                    PlayIntroRemainingLine();
-                    OnEnemyDied?.Invoke(enemiesRemaining);
+                    wasDeadOnLoad = true;
+                    hasPlayed = true; // so Update won't announce this death
                 }
             }
-        }
+
 
         private void Update()
         {
@@ -86,6 +94,7 @@ namespace RPG.Audio
 
             if (health.IsDead())
             {
+                // Enemy died during this play session, not before load
                 PlayDeathAnnouncement();
             }
         }
